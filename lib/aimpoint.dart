@@ -104,8 +104,8 @@ class Target {
       if (color == Colors.black) color = Colors.grey[800]!;
       if (color == Colors.white) color = Colors.white70;
       if (color == Colors.yellow) color = Colors.yellow[800]!;
-      //size = size + 2;
-      seperatorSize = seperatorSize * 2;
+      size = size + 1;
+      //seperatorSize = seperatorSize * 2;
     }
     return Stack(
       children: [
