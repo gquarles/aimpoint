@@ -2,7 +2,6 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AimpointLocation {
   final double theta;
@@ -46,26 +45,6 @@ class AimpointLocation {
     return AimpointLocation(
         theta: theta, magnitude: magnitudeAdjusted, negativeY: negativeY);
   }
-
-  static Future<AimpointLocation?> load(String name) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final theta = prefs.getDouble('$name/theta');
-    final magnitude = prefs.getDouble('$name/magnitude');
-    final negativeY = prefs.getBool('$name/negativeY');
-
-    if (theta == null || magnitude == null || negativeY == null) return null;
-    return AimpointLocation(
-        magnitude: magnitude, negativeY: negativeY, theta: theta);
-  }
-
-  static Future<void> save(String name, AimpointLocation aimpoint) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('$name/theta', aimpoint.theta);
-    await prefs.setDouble('$name/magnitude', aimpoint.magnitude);
-    await prefs.setBool('$name/negativeY', aimpoint.negativeY);
-    return;
-  }  
 }
 
 class Target {
@@ -83,7 +62,7 @@ class Target {
   int findSelectedRing(AimpointLocation aimpoint) {
     if (aimpoint.magnitude * radius < radius) {
       for (int ring = 0; ring < 13; ring++) {
-        if (!(aimpoint.magnitude * radius < radius - (ringSize * ring) )) {
+        if (!(aimpoint.magnitude * radius < radius - (ringSize * ring))) {
           return ring;
         }
       }  
@@ -103,8 +82,8 @@ class Target {
       if (color == Colors.red) color = Colors.red[800]!;
       if (color == Colors.black) color = Colors.grey[800]!;
       if (color == Colors.white) color = Colors.white70;
-      if (color == Colors.yellow) color = Colors.yellow[800]!;
-      size = size + 1;
+      if (color == Colors.yellow) color = Colors.amber[700]!;
+      //size = size + 1;
       //seperatorSize = seperatorSize * 2;
     }
     return Stack(
@@ -158,7 +137,8 @@ class Target {
     );
   }
 
-  static List<Widget> buildTarget(Target target, {int selectedRing = -1}) {
+  static List<Widget> buildTarget(Target target, {int selectedRing = -1, bool isHovering = false}) {
+    if (isHovering == false) selectedRing = -1;
     return [
       Center(
         child: drawRing(
@@ -278,7 +258,7 @@ class Target {
 
 class TargetWidgetSmall {
   static ConstrainedBox buildTarget(String name, {double width = 50, bool smallAimpoint = true}) {
-    return ConstrainedBox(constraints: BoxConstraints.loose(Size.fromWidth(width)), child: TargetWidget(addingArrows: false, allowEdit: false, name: name, targetController: TargetController(), smallAimpoint: smallAimpoint,));
+    return ConstrainedBox(constraints: BoxConstraints.loose(Size.fromWidth(width)), child: TargetWidget(addingArrows: false, allowEdit: false, name: name, targetController: TargetController(), smallAimpoint: smallAimpoint, selectedRingChanged: (int _) {},));
   }
 }
 
@@ -295,12 +275,13 @@ class TargetWidget extends StatefulWidget {
   final bool addingArrows;
   final Color backgroundColor;
   final bool smallAimpoint;
+  final Function(int) selectedRingChanged;
 
   const TargetWidget(
       {Key? key, required this.name,
       required this.allowEdit,
       required this.addingArrows,
-      required this.targetController, this.backgroundColor=Colors.transparent, this.smallAimpoint = false}) : super(key: key);
+      required this.targetController, this.backgroundColor=Colors.transparent, this.smallAimpoint = false, required this.selectedRingChanged}) : super(key: key);
 
   @override
   // ignore: no_logic_in_create_state
@@ -312,60 +293,22 @@ class TargetWidgetState extends State<TargetWidget> {
   List<AimpointLocation> arrows = [];
   final GlobalKey _globalKey = GlobalKey();
   int selectedRing = -1;
+  bool isHovering = false;
 
   TargetWidgetState(TargetController targetController) {
     targetController.clearArrows = clearArrows;
     targetController.fitAimpoint = fitAimpoint;
+    selectedRing = selectedRing;
   }
 
   void clearArrows() {
     setState(() {
       arrows.clear();
     });
-    saveArrows();
+
   }
 
   void fitAimpoint() {}
-
-  @override
-  void initState() {
-    AimpointLocation.load(widget.name).then((value) {
-      if (value != null) {
-        loadArrows();
-        setState(() {
-          aimpoint = value;
-        });
-      }
-    });
-    super.initState();
-  }
-
-  Future<void> loadArrows() async {
-    String path = '${widget.name}/arrows';
-    var prefs = await SharedPreferences.getInstance();
-
-    var count = prefs.getInt('$path/count');
-    count ??= 0;
-    List<AimpointLocation> tempArrows = [];
-    for (int i = 0; i < count; i++) {
-      var arrow = await AimpointLocation.load('$path/$i');
-      if (arrow != null) tempArrows.add(arrow);
-    }
-    setState(() {
-      arrows = tempArrows;
-    });
-  }
-
-  Future<void> saveArrows() async {
-    String path = '${widget.name}/arrows';
-
-    var prefs = await SharedPreferences.getInstance();
-
-    for (int i = 0; i < arrows.length; i++) {
-      await AimpointLocation.save('$path/$i', arrows[i]);
-    }
-    await prefs.setInt('$path/count', arrows.length);
-  }
 
   void onTargetTap(
       Offset offset, BoxConstraints display, Target target, bool save) {
@@ -377,12 +320,22 @@ class TargetWidgetState extends State<TargetWidget> {
       setState(() {
         arrows.add(newAimpoint);
       });
-      saveArrows();
+
     } else {
-      if (save) AimpointLocation.save(widget.name, newAimpoint);
+
       setState(() {
         aimpoint = newAimpoint;
         selectedRing = target.findSelectedRing(newAimpoint);
+        widget.selectedRingChanged(selectedRing);
+        if (save) {
+          setState(() {
+            isHovering = true;
+          });
+        } else {
+          setState(() {
+            isHovering = true;
+          });
+        }
       });
     }
   }
@@ -396,7 +349,12 @@ class TargetWidgetState extends State<TargetWidget> {
             onTapUp: (details) => onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, true),
             onHorizontalDragUpdate: (details) => onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false),
             onHorizontalDragStart: (details) => onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false),
-            onHorizontalDragEnd: (details) => AimpointLocation.save(widget.name, aimpoint),
+            onHorizontalDragCancel: () {setState(() {
+              isHovering = false;
+            });},
+            onHorizontalDragEnd: (details) {setState(() {
+              isHovering = false;
+            });},
             child: child,
           )
         : child;
@@ -457,7 +415,7 @@ class TargetWidgetState extends State<TargetWidget> {
                 ),
 
                 // Target rings
-                ...Target.buildTarget(target, selectedRing: selectedRing),
+                ...Target.buildTarget(target, selectedRing: selectedRing, isHovering: isHovering),
 
                 // Arrows
                 ...buildArrows(target),

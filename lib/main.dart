@@ -20,9 +20,11 @@ class AimpointPage extends StatefulWidget {
 
 class AimpointPageState extends State<AimpointPage> {
   TargetController targetController = TargetController();
+  String text = '';
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: Colors.yellow[50],
       appBar: AppBar(
@@ -34,6 +36,7 @@ class AimpointPageState extends State<AimpointPage> {
       ),
       body: Column(
         children: [
+          Text(text),
           Expanded(
             child: Center(
               child: TargetWidget(
@@ -42,6 +45,11 @@ class AimpointPageState extends State<AimpointPage> {
                 addingArrows: false,
                 targetController: targetController,
                 backgroundColor: Colors.yellow[50]!,
+                selectedRingChanged: (var data) {
+                  setState(() {
+                    text = '$data';
+                  });
+                },
               ),
             ),
           ),
