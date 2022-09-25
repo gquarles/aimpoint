@@ -2,6 +2,7 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AimpointLocation {
   final double theta;
@@ -321,12 +322,16 @@ class TargetWidgetState extends State<TargetWidget> {
         arrows.add(newAimpoint);
       });
 
-    } else {
-
       setState(() {
         aimpoint = newAimpoint;
-        selectedRing = target.findSelectedRing(newAimpoint);
+        var currentRing = target.findSelectedRing(newAimpoint);
+      if (currentRing != selectedRing) {
+        selectedRing = currentRing;
         widget.selectedRingChanged(selectedRing);
+        HapticFeedback.selectionClick();
+      }
+        
+        
         if (save) {
           setState(() {
             isHovering = true;
