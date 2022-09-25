@@ -68,7 +68,7 @@ class Target {
       }  
     }
 
-    return -1;
+    return 0;
   }
 
   static Widget drawRing(
@@ -344,20 +344,59 @@ class TargetWidgetState extends State<TargetWidget> {
       {required Widget child,
       required BoxConstraints display,
       required Target target}) {
-    return widget.allowEdit
-        ? GestureDetector(
-            onTapUp: (details) => onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, true),
-            onHorizontalDragUpdate: (details) => onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false),
-            onHorizontalDragStart: (details) => onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false),
-            onHorizontalDragCancel: () {setState(() {
-              isHovering = false;
-            });},
-            onHorizontalDragEnd: (details) {setState(() {
-              isHovering = false;
-            });},
-            child: child,
-          )
-        : child;
+    
+    if (widget.allowEdit == false) return child;
+
+    return GestureDetector(
+      onTapDown: (details) {
+        setState(() {
+          isHovering = true;
+        });
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+      },
+      onPanDown: (details) {
+        setState(() {
+          isHovering = true;
+        });
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+      },
+      onPanEnd: (details) {
+        setState(() {
+          isHovering = false;
+        });
+      },
+      onPanUpdate: (details) {
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+      },
+      onTapUp: (details) {
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, true);
+        setState(() {
+          isHovering = false;
+        });
+      },
+      onHorizontalDragUpdate: (details) {
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+      },
+      onHorizontalDragStart: (details) {
+        setState(() {
+          isHovering = true;
+        });
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+      },
+      onHorizontalDragCancel: () {
+        setState(() {
+          isHovering = false;
+        });
+      },
+
+      onHorizontalDragEnd: (details) {
+        setState(() {
+          isHovering = false;
+        });
+      },
+
+      child: child,
+    );
   }
 
   Widget buildAimpoint(
