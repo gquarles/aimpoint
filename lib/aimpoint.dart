@@ -321,6 +321,7 @@ class TargetWidgetState extends State<TargetWidget> {
       setState(() {
         arrows.add(newAimpoint);
       });
+    } else {
 
       setState(() {
         aimpoint = newAimpoint;
