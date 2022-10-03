@@ -1,5 +1,6 @@
 // ignore_for_file: sized_box_for_whitespace
 
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -329,7 +330,7 @@ class TargetWidgetState extends State<TargetWidget> {
       if (currentRing != selectedRing) {
         selectedRing = currentRing;
         widget.selectedRingChanged(selectedRing);
-        HapticFeedback.selectionClick();
+        if (Platform.isAndroid || Platform.isIOS) HapticFeedback.selectionClick();
       }
         
         
