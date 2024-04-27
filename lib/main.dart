@@ -12,7 +12,7 @@ void main() {
 }
 
 class AimpointPage extends StatefulWidget {
-  const AimpointPage({Key? key}) : super(key: key);
+  const AimpointPage({super.key});
 
   @override
   AimpointPageState createState() => AimpointPageState();
@@ -24,7 +24,6 @@ class AimpointPageState extends State<AimpointPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       backgroundColor: Colors.yellow[50],
       appBar: AppBar(

@@ -67,7 +67,7 @@ class Target {
         if (!(aimpoint.magnitude * radius < radius - (ringSize * ring))) {
           return ring;
         }
-      }  
+      }
     }
 
     return 0;
@@ -77,8 +77,8 @@ class Target {
       Color color, double size, double seperatorSize, double ringSize,
       {Color seperatorColor = Colors.black,
       Offset offset = Offset.zero,
-      bool drawName = false, bool selected = false}) {
-    
+      bool drawName = false,
+      bool selected = false}) {
     if (selected) {
       if (color == Colors.blue) color = Colors.blue[800]!;
       if (color == Colors.red) color = Colors.red[800]!;
@@ -139,128 +139,87 @@ class Target {
     );
   }
 
-  static List<Widget> buildTarget(Target target, {int selectedRing = -1, bool isHovering = false}) {
+  static List<Widget> buildTarget(Target target,
+      {int selectedRing = -1, bool isHovering = false}) {
     if (isHovering == false) selectedRing = -1;
     return [
       Center(
-        child: drawRing(
-          Colors.white,
-          target.radius,
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 1
-        ),
+        child: drawRing(Colors.white, target.radius, target.seperatorSize,
+            target.ringSize - target.seperatorSize,
+            selected: selectedRing == 1),
       ),
       Center(
-        child: drawRing(
-          Colors.white,
-          target.radius - target.ringSize,
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 2
-        ),
+        child: drawRing(Colors.white, target.radius - target.ringSize,
+            target.seperatorSize, target.ringSize - target.seperatorSize,
+            selected: selectedRing == 2),
       ),
       Center(
-        child: drawRing(
-          Colors.black,
-          target.radius - (target.ringSize * 2),
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          seperatorColor: Colors.black,
-          selected: selectedRing == 3
-        ),
+        child: drawRing(Colors.black, target.radius - (target.ringSize * 2),
+            target.seperatorSize, target.ringSize - target.seperatorSize,
+            seperatorColor: Colors.black, selected: selectedRing == 3),
       ),
       Center(
-        child: drawRing(
-          Colors.black,
-          target.radius - (target.ringSize * 3),
-          target.seperatorSize - 1,
-          target.ringSize - target.seperatorSize,
-          seperatorColor: Colors.white,
-          selected: selectedRing == 4
-          
-        ),
+        child: drawRing(Colors.black, target.radius - (target.ringSize * 3),
+            target.seperatorSize - 1, target.ringSize - target.seperatorSize,
+            seperatorColor: Colors.white, selected: selectedRing == 4),
       ),
       Center(
-        child: drawRing(
-          Colors.blue,
-          target.radius - (target.ringSize * 4),
-          target.seperatorSize + 1,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 5
-        ),
+        child: drawRing(Colors.blue, target.radius - (target.ringSize * 4),
+            target.seperatorSize + 1, target.ringSize - target.seperatorSize,
+            selected: selectedRing == 5),
       ),
       Center(
-        child: drawRing(
-          Colors.blue,
-          target.radius - (target.ringSize * 5),
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 6
-        ),
+        child: drawRing(Colors.blue, target.radius - (target.ringSize * 5),
+            target.seperatorSize, target.ringSize - target.seperatorSize,
+            selected: selectedRing == 6),
       ),
       Center(
-        child: drawRing(
-          Colors.red,
-          target.radius - (target.ringSize * 6),
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 7
-        ),
+        child: drawRing(Colors.red, target.radius - (target.ringSize * 6),
+            target.seperatorSize, target.ringSize - target.seperatorSize,
+            selected: selectedRing == 7),
       ),
       Center(
-        child: drawRing(
-          Colors.red,
-          target.radius - (target.ringSize * 7),
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 8
-        ),
+        child: drawRing(Colors.red, target.radius - (target.ringSize * 7),
+            target.seperatorSize, target.ringSize - target.seperatorSize,
+            selected: selectedRing == 8),
       ),
       Center(
-        child: drawRing(
-          Colors.yellow,
-          target.radius - (target.ringSize * 8),
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 9
-        ),
+        child: drawRing(Colors.yellow, target.radius - (target.ringSize * 8),
+            target.seperatorSize, target.ringSize - target.seperatorSize,
+            selected: selectedRing == 9),
       ),
       Center(
-        child: drawRing(
-          Colors.yellow,
-          target.radius - (target.ringSize * 9),
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 10
-        ),
+        child: drawRing(Colors.yellow, target.radius - (target.ringSize * 9),
+            target.seperatorSize, target.ringSize - target.seperatorSize,
+            selected: selectedRing == 10),
       ),
       Center(
-        child: drawRing(
-          Colors.yellow,
-          target.radius - (target.ringSize * 10),
-          target.seperatorSize,
-          target.ringSize - target.seperatorSize,
-          selected: selectedRing == 11
-        ),
+        child: drawRing(Colors.yellow, target.radius - (target.ringSize * 10),
+            target.seperatorSize, target.ringSize - target.seperatorSize,
+            selected: selectedRing == 11),
       ),
       Center(
-        child: drawRing(
-          Colors.yellow,
-          target.radius - (target.ringSize * 11),
-          target.seperatorSize + 1,
-          target.ringSize - target.seperatorSize,
-          seperatorColor: Colors.yellow,
-          selected: selectedRing == 12
-        ),
+        child: drawRing(Colors.yellow, target.radius - (target.ringSize * 11),
+            target.seperatorSize + 1, target.ringSize - target.seperatorSize,
+            seperatorColor: Colors.yellow, selected: selectedRing == 12),
       ),
     ];
   }
 }
 
 class TargetWidgetSmall {
-  static ConstrainedBox buildTarget(String name, {double width = 50, bool smallAimpoint = true}) {
-    return ConstrainedBox(constraints: BoxConstraints.loose(Size.fromWidth(width)), child: TargetWidget(addingArrows: false, allowEdit: false, name: name, targetController: TargetController(), smallAimpoint: smallAimpoint, selectedRingChanged: (int _) {},));
+  static ConstrainedBox buildTarget(String name,
+      {double width = 50, bool smallAimpoint = true}) {
+    return ConstrainedBox(
+        constraints: BoxConstraints.loose(Size.fromWidth(width)),
+        child: TargetWidget(
+          addingArrows: false,
+          allowEdit: false,
+          name: name,
+          targetController: TargetController(),
+          smallAimpoint: smallAimpoint,
+          selectedRingChanged: (int _) {},
+        ));
   }
 }
 
@@ -280,10 +239,14 @@ class TargetWidget extends StatefulWidget {
   final Function(int) selectedRingChanged;
 
   const TargetWidget(
-      {Key? key, required this.name,
+      {super.key,
+      required this.name,
       required this.allowEdit,
       required this.addingArrows,
-      required this.targetController, this.backgroundColor=Colors.transparent, this.smallAimpoint = false, required this.selectedRingChanged}) : super(key: key);
+      required this.targetController,
+      this.backgroundColor = Colors.transparent,
+      this.smallAimpoint = false,
+      required this.selectedRingChanged});
 
   @override
   // ignore: no_logic_in_create_state
@@ -307,7 +270,6 @@ class TargetWidgetState extends State<TargetWidget> {
     setState(() {
       arrows.clear();
     });
-
   }
 
   void fitAimpoint() {}
@@ -316,24 +278,25 @@ class TargetWidgetState extends State<TargetWidget> {
       Offset offset, BoxConstraints display, Target target, bool save) {
     if (widget.addingArrows && save == false) return;
 
-    var newAimpoint = AimpointLocation.fromCartesian(display, offset.dx,offset.dy, target.radius);
-    
+    var newAimpoint = AimpointLocation.fromCartesian(
+        display, offset.dx, offset.dy, target.radius);
+
     if (widget.addingArrows) {
       setState(() {
         arrows.add(newAimpoint);
       });
     } else {
-
       setState(() {
         aimpoint = newAimpoint;
         var currentRing = target.findSelectedRing(newAimpoint);
-      if (currentRing != selectedRing) {
-        selectedRing = currentRing;
-        widget.selectedRingChanged(selectedRing);
-        if (Platform.isAndroid || Platform.isIOS) HapticFeedback.selectionClick();
-      }
-        
-        
+        if (currentRing != selectedRing) {
+          selectedRing = currentRing;
+          widget.selectedRingChanged(selectedRing);
+          if (Platform.isAndroid || Platform.isIOS) {
+            HapticFeedback.selectionClick();
+          }
+        }
+
         if (save) {
           setState(() {
             isHovering = true;
@@ -351,7 +314,6 @@ class TargetWidgetState extends State<TargetWidget> {
       {required Widget child,
       required BoxConstraints display,
       required Target target}) {
-    
     if (widget.allowEdit == false) return child;
 
     return GestureDetector(
@@ -359,13 +321,15 @@ class TargetWidgetState extends State<TargetWidget> {
         setState(() {
           isHovering = true;
         });
-        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy),
+            display, target, false);
       },
       onPanDown: (details) {
         setState(() {
           isHovering = true;
         });
-        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy),
+            display, target, false);
       },
       onPanEnd: (details) {
         setState(() {
@@ -373,35 +337,37 @@ class TargetWidgetState extends State<TargetWidget> {
         });
       },
       onPanUpdate: (details) {
-        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy),
+            display, target, false);
       },
       onTapUp: (details) {
-        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, true);
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy),
+            display, target, true);
         setState(() {
           isHovering = false;
         });
       },
       onHorizontalDragUpdate: (details) {
-        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy),
+            display, target, false);
       },
       onHorizontalDragStart: (details) {
         setState(() {
           isHovering = true;
         });
-        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy), display, target, false);
+        onTargetTap(Offset(details.localPosition.dx, details.localPosition.dy),
+            display, target, false);
       },
       onHorizontalDragCancel: () {
         setState(() {
           isHovering = false;
         });
       },
-
       onHorizontalDragEnd: (details) {
         setState(() {
           isHovering = false;
         });
       },
-
       child: child,
     );
   }
@@ -461,7 +427,8 @@ class TargetWidgetState extends State<TargetWidget> {
                 ),
 
                 // Target rings
-                ...Target.buildTarget(target, selectedRing: selectedRing, isHovering: isHovering),
+                ...Target.buildTarget(target,
+                    selectedRing: selectedRing, isHovering: isHovering),
 
                 // Arrows
                 ...buildArrows(target),
